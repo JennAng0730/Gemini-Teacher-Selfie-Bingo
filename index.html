@@ -51,4 +51,87 @@
             position: absolute;
             bottom: 0;
             width: 100%;
-            padding:
+            padding: 8px;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body class="p-4">
+
+    <header class="text-center mb-6 mt-2">
+        <h1 class="header-font text-2xl text-[--mgc-gold] tracking-wider uppercase">MGC New Life</h1>
+        <h2 class="text-xs tracking-[0.3em] font-light opacity-80 uppercase">Chinese Teachers Bingo</h2>
+        <div class="h-1 w-16 bg-[--mgc-gold] mx-auto mt-2 rounded-full"></div>
+    </header>
+
+    <div class="bingo-grid max-w-md mx-auto">
+        <script>
+            const prompts = [
+                { text: "Has pet", icon: "🐈" },
+                { text: "Loves spicy food", icon: "🌶️" },
+                { text: "Likes shopping", icon: "🛍️" },
+                { text: "Still single", icon: "💎" },
+                { text: "Travelled 5+ countries", icon: "✈️" },
+                { text: "Speaks 4+ languages", icon: "🌏" },
+                { text: "No PTC yet", icon: "🚫" },
+                { text: "Teaches HS", icon: "🎓" },
+                { text: "Teaches GS", icon: "✏️" },
+                { text: "Teaches EY", icon: "🧸" }
+            ];
+
+            document.write(prompts.map((p, i) => `
+                <div id="tile-${i}" class="glass-tile aspect-[4/5] flex flex-col items-center justify-center p-3 text-center">
+                    
+                    <div id="ui-${i}" class="z-10 w-full">
+                        <div class="text-2xl mb-1">${p.icon}</div>
+                        <p class="text-[10px] font-semibold leading-tight mb-2 h-8 flex items-center justify-center">${p.text}</p>
+                        <input type="text" id="name-${i}" placeholder="Name" 
+                            class="w-full bg-black/40 border border-white/10 rounded-md py-1 px-2 text-[10px] mb-2 focus:outline-none focus:border-[--mgc-gold]">
+                        <button onclick="triggerCapture(${i})" class="w-full bg-[--mgc-gold] text-black text-[9px] font-bold py-1.5 rounded-md uppercase">
+                            Snap
+                        </button>
+                    </div>
+
+                    <div id="preview-${i}" class="photo-container hidden">
+                        <img id="img-${i}" class="w-full h-full object-cover">
+                        <div class="label-overlay">
+                            <p class="text-[7px] text-[--mgc-gold] font-bold uppercase tracking-tighter">${p.text}</p>
+                            <p id="display-name-${i}" class="text-[10px] font-bold truncate text-white"></p>
+                        </div>
+                    </div>
+
+                    <input type="file" id="file-${i}" accept="image/*" capture="user" class="hidden" onchange="handleFile(this, ${i})">
+                </div>
+            `).join(''));
+
+            function triggerCapture(i) {
+                const name = document.getElementById(`name-${i}`).value;
+                if (!name.trim()) {
+                    alert("Please type the teacher's name!");
+                    return;
+                }
+                document.getElementById(`file-${i}`).click();
+            }
+
+            function handleFile(input, i) {
+                if (input.files && input.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        document.getElementById(`img-${i}`).src = e.target.result;
+                        document.getElementById(`display-name-${i}`).innerText = document.getElementById(`name-${i}`).value;
+                        document.getElementById(`ui-${i}`).classList.add('hidden');
+                        document.getElementById( `preview-${i}`).classList.remove('hidden');
+                        document.getElementById(`tile-${i}`).classList.add('stamped-tile');
+                    }
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+        </script>
+    </div>
+
+    <footer class="mt-8 text-center opacity-40 text-[8px] tracking-[0.2em]">
+        MGC NEW LIFE CHRISTIAN ACADEMY • 2026
+    </footer>
+
+</body>
+</html>
